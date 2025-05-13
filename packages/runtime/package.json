@@ -1,0 +1,30 @@
+{
+  "name": "own-fe-framework",
+  "version": "1.0.0",
+  "main": "dist/own-fe-framework.js",
+  "files": [
+    "dist/own-fe-framework.js"
+  ],
+  "scripts": {
+    "prepack": "npm run build",
+    "build": "rollup -c",
+    "lint": "eslint src",
+    "lint:fix": "eslint src --fix",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "@vitest/eslint-plugin": "^1.1.44",
+    "eslint": "^9.26.0",
+    "jsdom": "^26.1.0",
+    "rollup": "^4.40.2",
+    "rollup-plugin-cleanup": "^3.2.1",
+    "rollup-plugin-filesize": "^10.0.0",
+    "vitest": "^3.1.3"
+  }
+}

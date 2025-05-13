@@ -1,0 +1,16 @@
+{
+  "name": "own-fe-framework-project",
+  "version": "1.0.0",
+  "description": "Простой FE-фреймворк по книге Анхеля Сола Орбайсета \"Создание фронтенд-фреймворка\".",
+  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "packages/runtime"
+  ],
+  "scripts": {
+    "serve:examples": "npx http-server . -o ./examples/"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
