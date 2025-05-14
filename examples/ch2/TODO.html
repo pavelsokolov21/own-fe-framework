@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="reset.css" />
+    <link rel="stylesheet" href="TODO.css" />
+    <title>Super TODO</title>
+    <script type="module" src="TODO.js"></script>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1 class="title">My TODO</h1>
+
+        <div class="new-todo-container">
+          <label class="input-container">
+            <span>New TODO</span>
+            <input type="text" id="todo-input" />
+          </label>
+          <button id="add-todo-btn" disabled>Add</button>
+        </div>
+
+        <ul id="todo-list" class="todo-list"></ul>
+      </section>
+    </main>
+  </body>
+</html>
