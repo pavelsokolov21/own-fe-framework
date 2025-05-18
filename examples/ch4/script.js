@@ -1,6 +1,6 @@
 import { h, hFragment, mountDOM, destroyDOM } from "own-fe-framework";
 
-const POST_V_DOM_1 = hFragment([
+const PostFirst = hFragment([
   h("div", { class: "container" }, [
     h("h1", { class: "title" }, ["First"]),
     h("p", {}, ["Some paragraph first"]),
@@ -19,7 +19,7 @@ const POST_V_DOM_1 = hFragment([
   ]),
 ]);
 
-const POST_V_DOM_2 = hFragment([
+const PostSecond = hFragment([
   h("div", { class: "container" }, [
     h("h1", { class: "title" }, ["Second"]),
     h("p", {}, ["Some paragraph second"]),
@@ -38,10 +38,10 @@ const POST_V_DOM_2 = hFragment([
   ]),
 ]);
 
-const MAIN_V_DOM = hFragment([POST_V_DOM_1, POST_V_DOM_2]);
+const App = hFragment([PostFirst, PostSecond]);
 
-mountDOM(MAIN_V_DOM, document.querySelector("body"));
+mountDOM(App, document.querySelector("body"));
 
-destroyDOM(POST_V_DOM_2);
+destroyDOM(PostSecond);
 
-console.log(MAIN_V_DOM);
+console.log(App);
