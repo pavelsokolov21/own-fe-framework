@@ -1,4 +1,5 @@
 import { expect, describe, it } from "vitest";
+
 import { hFragment, h, DOM_TYPES } from "../h";
 
 describe("Функция h", () => {

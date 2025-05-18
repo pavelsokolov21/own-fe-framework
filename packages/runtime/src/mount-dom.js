@@ -43,7 +43,7 @@ function createElementNode(vdom, parentEl) {
 function addProps(el, props, vdom) {
   const { on: events, ...attrs } = props;
 
-  vdom.listeners = addEventListeners(events, el);
+  vdom.listeners = addEventListeners(el, events);
   setAttributes(el, attrs);
 }
 
