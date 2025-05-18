@@ -1,9 +1,17 @@
-import { describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, test, vi } from "vitest";
 
-import { addEventListener, addEventListeners } from "../events";
+import {
+  addEventListener,
+  addEventListeners,
+  removeEventListeners,
+} from "../events";
 
 describe("Функция addEventListener", () => {
-  test("должна привязать обработчик и вернуть функцию", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("должен привязать обработчик и вернуть функцию", () => {
     const handler = vi.fn();
     const EVENT_NAME = "click";
     const addEventListenerMock = vi.fn();
@@ -18,7 +26,11 @@ describe("Функция addEventListener", () => {
 });
 
 describe("Функция addEventListeners", () => {
-  test("должна привязать обработчики вернуть объект обработчиков", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("должен привязать обработчики вернуть объект обработчиков", () => {
     const clickHandler = vi.fn();
     const changeHandler = vi.fn();
     const addEventListenerMock = vi.fn();
@@ -36,5 +48,23 @@ describe("Функция addEventListeners", () => {
       click: clickHandler,
       change: changeHandler,
     });
+  });
+});
+
+describe("Функция removeEventListeners", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  test("должен отвязать обработчики от элемента", () => {
+    const clickHandler = vi.fn();
+    const removeEVentListenerMock = vi.fn();
+
+    removeEventListeners(
+      { removeEventListener: removeEVentListenerMock },
+      { click: clickHandler }
+    );
+
+    expect(removeEVentListenerMock).toHaveBeenCalledWith("click", clickHandler);
   });
 });

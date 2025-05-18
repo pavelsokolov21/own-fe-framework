@@ -1,18 +1,14 @@
 import { vi } from "vitest";
 
-const classListAddMock = vi.fn();
-const removeAttributeMock = vi.fn();
-const setAttributeMock = vi.fn();
-const documentAppendMock = vi.fn();
-const addEventListenerMock = vi.fn();
-
 export const BASE_NODE = {
   classList: {
-    add: classListAddMock,
+    add: vi.fn(),
   },
-  removeAttribute: removeAttributeMock,
-  setAttribute: setAttributeMock,
-  append: documentAppendMock,
-  addEventListener: addEventListenerMock,
+  removeAttribute: vi.fn(),
+  setAttribute: vi.fn(),
+  append: vi.fn(),
+  remove: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
   style: {},
 };
