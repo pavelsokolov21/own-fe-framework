@@ -1,6 +1,6 @@
 {
   "name": "own-fe-framework",
-  "version": "1.2.0",
+  "version": "0.1.0",
   "main": "dist/own-fe-framework.js",
   "files": [
     "dist/own-fe-framework.js"
