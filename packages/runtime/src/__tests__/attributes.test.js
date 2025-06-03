@@ -16,14 +16,18 @@ describe("Функция setAttributes", () => {
     const attrs = { class: "className" };
     setAttributes(NODE, attrs);
 
-    expect(BASE_NODE.classList.add).toHaveBeenCalledWith(attrs.class);
+    expect(NODE.className).toBe(attrs.class);
   });
 
   test("должен установить className через массив", () => {
-    const attrs = { class: ["foo", "bar"] };
+    const classNames = ["foo", "bar"];
+    const attrs = { class: classNames };
     setAttributes(NODE, attrs);
 
-    expect(BASE_NODE.classList.add).toHaveBeenCalledWith(attrs.class.join(" "));
+    expect(BASE_NODE.classList.add).toHaveBeenCalledWith(
+      classNames[0],
+      classNames[1]
+    );
   });
 
   test("должен установить style", () => {

@@ -19,11 +19,13 @@ export const setAttributes = (el, attrs) => {
 export function setClass(el, className) {
   el.className = "";
 
-  const newClassName = Array.isArray(className)
-    ? className.join(" ")
-    : className;
+  if (typeof className === "string") {
+    el.className = className;
+  }
 
-  el.classList.add(newClassName);
+  if (Array.isArray(className)) {
+    el.classList.add(...className);
+  }
 }
 
 export function setStyle(el, name, value) {
