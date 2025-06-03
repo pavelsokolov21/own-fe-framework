@@ -6,7 +6,7 @@ export const DOM_TYPES = {
   FRAGMENT: "fragment",
 };
 
-function hString(txt) {
+export function hString(txt) {
   return { type: DOM_TYPES.TEXT, value: txt };
 }
 
