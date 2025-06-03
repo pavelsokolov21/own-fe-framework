@@ -37,6 +37,8 @@ export function removeStyle(el, name) {
 export function setAttribute(el, name, value) {
   if (value === null) {
     removeAttribute(el, name);
+  } else if (typeof value === "boolean") {
+    el[name] = value;
   } else {
     el.setAttribute(name, value);
   }

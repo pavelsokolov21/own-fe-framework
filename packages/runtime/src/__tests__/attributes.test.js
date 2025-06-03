@@ -56,4 +56,11 @@ describe("Функция setAttributes", () => {
 
     expect(NODE.removeAttribute).toHaveBeenCalledWith("id");
   });
+
+  test("должен добавить булевый атрибут", () => {
+    const attrs = { disabled: true };
+    setAttributes(NODE, attrs);
+
+    expect(NODE.disabled).toBe(true);
+  });
 });
