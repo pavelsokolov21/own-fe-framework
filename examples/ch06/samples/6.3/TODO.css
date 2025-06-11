@@ -1,0 +1,97 @@
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.title {
+  font-size: 48px;
+}
+
+.new-todo-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-container > span {
+  display: inline-block;
+}
+
+#add-todo-btn {
+  height: 24px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 4px;
+  background-color: rgb(150, 150, 150);
+  color: rgb(221, 221, 221);
+  border: 1px solid rgb(119, 119, 119);
+  transition: all 0.3s ease;
+}
+
+#add-todo-btn:disabled {
+  background-color: rgb(224, 224, 224);
+  color: rgb(198, 198, 198);
+  cursor: none;
+  border: 1px solid rgb(163, 163, 163);
+}
+
+#add-todo-btn:hover {
+  opacity: 0.92;
+}
+
+#todo-input {
+  height: 24px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-left: 24px;
+  margin-top: 12px;
+}
+
+.todo-list__item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.todo-list__item::before {
+  position: absolute;
+  content: "";
+  left: -12px;
+  width: 4px;
+  height: 4px;
+  background: black;
+  border-radius: 50%;
+}
+
+.todo-list__item_done > span {
+  text-decoration: line-through;
+}
+
+.todo-list__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
