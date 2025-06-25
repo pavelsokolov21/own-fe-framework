@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { setAttributes } from "../attributes";
 import { BASE_NODE } from "./static/dom-api";
@@ -12,14 +12,14 @@ describe("Функция setAttributes", () => {
     NODE = BASE_NODE;
   });
 
-  test("должен установить className через строку", () => {
+  it("должен установить className через строку", () => {
     const attrs = { class: "className" };
     setAttributes(NODE, attrs);
 
     expect(NODE.className).toBe(attrs.class);
   });
 
-  test("должен установить className через массив", () => {
+  it("должен установить className через массив", () => {
     const classNames = ["foo", "bar"];
     const attrs = { class: classNames };
     setAttributes(NODE, attrs);
@@ -30,14 +30,14 @@ describe("Функция setAttributes", () => {
     );
   });
 
-  test("должен установить style", () => {
+  it("должен установить style", () => {
     const attrs = { style: { color: "red", fontSize: "14px" } };
     setAttributes(NODE, attrs);
 
     expect(NODE.style).toEqual({ color: "red", fontSize: "14px" });
   });
 
-  test("должен установить атрибуты", () => {
+  it("должен установить атрибуты", () => {
     const attrs = {
       id: "foo",
       href: "http://sample.com",
@@ -53,7 +53,7 @@ describe("Функция setAttributes", () => {
     );
   });
 
-  test("должен удалить атрибут", () => {
+  it("должен удалить атрибут", () => {
     const attrs = { id: "foo", href: "http://sample.com" };
     setAttributes(NODE, attrs);
     setAttributes(NODE, { ...attrs, id: null });
@@ -61,7 +61,7 @@ describe("Функция setAttributes", () => {
     expect(NODE.removeAttribute).toHaveBeenCalledWith("id");
   });
 
-  test("должен добавить булевый атрибут", () => {
+  it("должен добавить булевый атрибут", () => {
     const attrs = { disabled: true };
     setAttributes(NODE, attrs);
 

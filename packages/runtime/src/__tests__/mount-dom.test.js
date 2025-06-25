@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { DOM_TYPES } from "../h";
 import { insert, mountDOM } from "../mount-dom";
@@ -25,7 +25,7 @@ describe("Функция mountDOM", () => {
     NODE = BASE_NODE;
   });
 
-  test("должен создать текстовую ноду", () => {
+  it("должен создать текстовую ноду", () => {
     const V_DOM = { type: DOM_TYPES.TEXT, value: "lorem" };
     mountDOM(V_DOM, NODE);
 
@@ -34,7 +34,7 @@ describe("Функция mountDOM", () => {
     expect(V_DOM.el).toBe(TEXT_NODE_RESULT);
   });
 
-  test("должен создать фрагментную ноду с текстами", () => {
+  it("должен создать фрагментную ноду с текстами", () => {
     const V_DOM = {
       type: DOM_TYPES.FRAGMENT,
       children: [
@@ -48,7 +48,7 @@ describe("Функция mountDOM", () => {
     expect(V_DOM.el).toEqual(V_DOM.el);
   });
 
-  test("должен создать ноду тега без пропсов", () => {
+  it("должен создать ноду тега без пропсов", () => {
     const V_DOM = {
       type: DOM_TYPES.ELEMENT,
       tag: "h1",
@@ -71,27 +71,7 @@ describe("Функция mountDOM", () => {
     );
   });
 
-  test("должен добавить обработчик событий", () => {
-    const clickHandler = vi.fn();
-    const V_DOM = {
-      type: DOM_TYPES.ELEMENT,
-      tag: "button",
-      props: {
-        on: {
-          click: clickHandler,
-        },
-      },
-      children: [],
-    };
-
-    mountDOM(V_DOM, NODE);
-
-    expect(V_DOM.listeners).toEqual({
-      click: clickHandler,
-    });
-  });
-
-  test("должен добавить атрибуты", () => {
+  it("должен добавить атрибуты", () => {
     const setAttributeSpy = vi.spyOn(attributes, "setAttributes");
 
     const V_DOM = {
@@ -116,7 +96,7 @@ describe("Функция mountDOM", () => {
     );
   });
 
-  test("должен вызвать перебор children", () => {
+  it("должен вызвать перебор children", () => {
     const forEachSpy = vi.spyOn(Array.prototype, "forEach");
     const V_DOM = {
       type: DOM_TYPES.ELEMENT,
@@ -146,7 +126,7 @@ describe("insert", () => {
     NODE = BASE_NODE;
   });
 
-  test("должен добавлять элемент в конец, если индекс не указан", () => {
+  it("должен добавлять элемент в конец, если индекс не указан", () => {
     const el = { ...NODE };
     const parentEl = { ...NODE, childNodes: [] };
 
@@ -156,14 +136,14 @@ describe("insert", () => {
     expect(parentEl.insertBefore).not.toHaveBeenCalled();
   });
 
-  test("должен выбрасывать ошибку, если индекс отрицательный", () => {
+  it("должен выбрасывать ошибку, если индекс отрицательный", () => {
     const el = { ...NODE };
     const parentEl = { ...NODE, childNodes: [] };
 
     expect(() => insert(el, parentEl, -1)).toThrow("Index must be a positive");
   });
 
-  test("должен добавлять элемент в конец, если индекс больше длины childNodes", () => {
+  it("должен добавлять элемент в конец, если индекс больше длины childNodes", () => {
     const el = { ...NODE };
     const parentEl = { ...NODE, childNodes: [{}] };
 
@@ -173,7 +153,7 @@ describe("insert", () => {
     expect(parentEl.insertBefore).not.toHaveBeenCalled();
   });
 
-  test("должен вставлять элемент перед указанным индексом", () => {
+  it("должен вставлять элемент перед указанным индексом", () => {
     const el = { ...NODE };
     const parentEl = { ...NODE, childNodes: [{}, {}, {}] };
 

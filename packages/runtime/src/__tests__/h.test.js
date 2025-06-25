@@ -1,6 +1,6 @@
 import { expect, describe, it } from "vitest";
 
-import { hFragment, h, DOM_TYPES } from "../h";
+import { hFragment, h, DOM_TYPES, extractChildren } from "../h";
 
 describe("Функция h", () => {
   it("должна построить верный виртуальный DOM", () => {
@@ -115,5 +115,66 @@ describe("Функция h", () => {
         },
       ],
     });
+  });
+});
+
+describe("Функция extractChildren", () => {
+  it("должен возвращать пустой массив, если children равно null", () => {
+    const vdom = { children: null };
+    const result = extractChildren(vdom);
+    expect(result).toEqual([]);
+  });
+
+  it("должен возвращать детей, если они не фрагменты", () => {
+    const vdom = {
+      children: [
+        { type: DOM_TYPES.ELEMENT, tag: "div" },
+        { type: DOM_TYPES.ELEMENT, tag: "span" },
+      ],
+    };
+    const result = extractChildren(vdom);
+    expect(result).toEqual([
+      { type: DOM_TYPES.ELEMENT, tag: "div" },
+      { type: DOM_TYPES.ELEMENT, tag: "span" },
+    ]);
+  });
+
+  it("должен рекурсивно извлекать детей внутри фрагментов", () => {
+    const vdom = {
+      children: [
+        {
+          type: DOM_TYPES.FRAGMENT,
+          children: [{ type: DOM_TYPES.ELEMENT, tag: "div" }],
+        },
+        { type: DOM_TYPES.ELEMENT, tag: "span" },
+      ],
+    };
+    const result = extractChildren(vdom);
+    expect(result).toEqual([
+      { type: DOM_TYPES.ELEMENT, tag: "div" },
+      { type: DOM_TYPES.ELEMENT, tag: "span" },
+    ]);
+  });
+
+  it("должен извлекать детей на нескольких уровнях фрагментов", () => {
+    const vdom = {
+      children: [
+        {
+          type: DOM_TYPES.FRAGMENT,
+          children: [
+            {
+              type: DOM_TYPES.FRAGMENT,
+              children: [{ type: DOM_TYPES.ELEMENT, tag: "div" }],
+            },
+          ],
+        },
+        { type: DOM_TYPES.ELEMENT, tag: "span" },
+      ],
+    };
+    const result = extractChildren(vdom);
+    expect(result).toEqual([
+      { type: DOM_TYPES.ELEMENT, tag: "div" },
+      { type: DOM_TYPES.ELEMENT, tag: "span" },
+    ]);
   });
 });

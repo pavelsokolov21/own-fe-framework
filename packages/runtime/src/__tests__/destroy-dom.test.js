@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 import { BASE_NODE } from "./static/dom-api";
 import { destroyDOM } from "../destroy-dom";
@@ -13,7 +13,7 @@ describe("Функция destroyDOM", () => {
     vi.clearAllMocks();
   });
 
-  test("должен удалить текстовую ноду", () => {
+  it("должен удалить текстовую ноду", () => {
     const V_DOM = { el: BASE_NODE, type: DOM_TYPES.TEXT, value: "lorem" };
     destroyDOM(V_DOM);
 
@@ -21,7 +21,7 @@ describe("Функция destroyDOM", () => {
     expect(V_DOM.el).toBeUndefined();
   });
 
-  test("должен удалить ноду элемента и всех детей", () => {
+  it("должен удалить ноду элемента и всех детей", () => {
     const forEachSpy = vi.spyOn(Array.prototype, "forEach");
 
     const V_DOM = {
@@ -38,7 +38,7 @@ describe("Функция destroyDOM", () => {
     expect(forEachSpy).toHaveBeenCalled();
   });
 
-  test("должен удалить ноду элемента и отписать события", () => {
+  it("должен удалить ноду элемента и отписать события", () => {
     const LISTENERS = {
       click: vi.fn(),
     };
@@ -60,7 +60,7 @@ describe("Функция destroyDOM", () => {
     expect(V_DOM.listeners).toBeUndefined();
   });
 
-  test("должен удалить фрагментную ноду", () => {
+  it("должен удалить фрагментную ноду", () => {
     const forEachSpy = vi.spyOn(Array.prototype, "forEach");
 
     const V_DOM = {

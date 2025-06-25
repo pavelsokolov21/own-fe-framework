@@ -5,7 +5,7 @@ import {
   arraysDiffSequence,
 } from "../utils/arrays";
 
-import { describe, expect, test } from "vitest";
+import { describe, expect, it } from "vitest";
 
 const createBaseReturn = (added = [], removed = []) => ({
   added,
@@ -13,13 +13,13 @@ const createBaseReturn = (added = [], removed = []) => ({
 });
 
 describe("Функция arraysDiff", () => {
-  test("должен вернуть объект с заполненным списком удаленных элементов", () => {
+  it("должен вернуть объект с заполненным списком удаленных элементов", () => {
     const result = arraysDiff(["a", "b"], ["a"]);
 
     expect(result).toEqual(createBaseReturn([], ["b"]));
   });
 
-  test("должен вернуть объект с заполненным списком добавленных элементов", () => {
+  it("должен вернуть объект с заполненным списком добавленных элементов", () => {
     const result = arraysDiff(["a"], ["a", "b"]);
 
     expect(result).toEqual(createBaseReturn(["b"], []));
@@ -27,7 +27,7 @@ describe("Функция arraysDiff", () => {
 });
 
 describe("Класс ArrayWithOriginalIndices", () => {
-  test("должен корректно находить оригинальный индекс", () => {
+  it("должен корректно находить оригинальный индекс", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
 
     expect(arr.originalIndexAt(0)).toBe(0);
@@ -35,7 +35,7 @@ describe("Класс ArrayWithOriginalIndices", () => {
     expect(arr.originalIndexAt(2)).toBe(2);
   });
 
-  test("должен находить индекс элемента начиная с заданного индекса", () => {
+  it("должен находить индекс элемента начиная с заданного индекса", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
 
     expect(arr.findIndexFrom(2, 0)).toBe(1);
@@ -43,28 +43,28 @@ describe("Класс ArrayWithOriginalIndices", () => {
     expect(arr.findIndexFrom(4, 0)).toBe(-1);
   });
 
-  test("должен проверять, является ли элемент удалённым", () => {
+  it("должен проверять, является ли элемент удалённым", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
 
     expect(arr.isRemoval(1, [1, 3])).toBe(true);
     expect(arr.isRemoval(0, [1, 2, 3])).toBe(false);
   });
 
-  test("должен проверять, является ли элемент неизменным", () => {
+  it("должен проверять, является ли элемент неизменным", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
 
     expect(arr.isNoop(0, [1, 2, 3])).toBe(true);
     expect(arr.isNoop(1, [1, 3, 2])).toBe(false);
   });
 
-  test("должен проверять, является ли элемент дополнительным", () => {
+  it("должен проверять, является ли элемент дополнительным", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
 
     expect(arr.isAdditional(4, 0)).toBe(true);
     expect(arr.isAdditional(2, 0)).toBe(false);
   });
 
-  test("должен удалять элемент и возвращать операцию", () => {
+  it("должен удалять элемент и возвращать операцию", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
     const operation = arr.removeItem(1);
 
@@ -72,7 +72,7 @@ describe("Класс ArrayWithOriginalIndices", () => {
     expect(arr.length).toBe(2);
   });
 
-  test("должен добавлять элемент и возвращать операцию", () => {
+  it("должен добавлять элемент и возвращать операцию", () => {
     const arr = new ArrayWithOriginalIndices([1, 3], (a, b) => a === b);
     const operation = arr.addItem(2, 1);
 
@@ -80,7 +80,7 @@ describe("Класс ArrayWithOriginalIndices", () => {
     expect(arr.length).toBe(3);
   });
 
-  test("должен перемещать элемент и возвращать операцию", () => {
+  it("должен перемещать элемент и возвращать операцию", () => {
     const arr = new ArrayWithOriginalIndices([1, 2, 3], (a, b) => a === b);
     const operation = arr.moveItem(2, 0);
 
@@ -97,7 +97,7 @@ describe("Класс ArrayWithOriginalIndices", () => {
 });
 
 describe("Функция arraysDiffSequence", () => {
-  test("должен возвращать пустую последовательность для одинаковых массивов", () => {
+  it("должен возвращать пустую последовательность для одинаковых массивов", () => {
     const oldArr = [1, 2, 3];
     const newArr = [1, 2, 3];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -109,7 +109,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен корректно обрабатывать удаление элемента", () => {
+  it("должен корректно обрабатывать удаление элемента", () => {
     const oldArr = [1, 2, 3];
     const newArr = [1, 3];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -121,7 +121,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен корректно обрабатывать добавление элемента", () => {
+  it("должен корректно обрабатывать добавление элемента", () => {
     const oldArr = [1, 3];
     const newArr = [1, 2, 3];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -133,7 +133,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен корректно обрабатывать перемещение элемента", () => {
+  it("должен корректно обрабатывать перемещение элемента", () => {
     const oldArr = [1, 2, 3];
     const newArr = [3, 1, 2];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -145,7 +145,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен обрабатывать смешанные операции добавления, удаления и перемещения", () => {
+  it("должен обрабатывать смешанные операции добавления, удаления и перемещения", () => {
     const oldArr = [1, 2, 3, 4];
     const newArr = [3, 1, 5];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -159,7 +159,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен обрабатывать случай, когда все элементы удалены", () => {
+  it("должен обрабатывать случай, когда все элементы удалены", () => {
     const oldArr = [1, 2, 3];
     const newArr = [];
     const result = arraysDiffSequence(oldArr, newArr);
@@ -171,7 +171,7 @@ describe("Функция arraysDiffSequence", () => {
     ]);
   });
 
-  test("должен обрабатывать случай, когда все элементы добавлены", () => {
+  it("должен обрабатывать случай, когда все элементы добавлены", () => {
     const oldArr = [];
     const newArr = [1, 2, 3];
     const result = arraysDiffSequence(oldArr, newArr);

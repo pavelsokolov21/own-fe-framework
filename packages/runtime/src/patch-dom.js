@@ -53,7 +53,7 @@ const patchClasses = (el, oldClass, newClass) => {
   }
 };
 
-const patchStyles = (el, oldStyle, newStyle) => {
+const patchStyles = (el, oldStyle = {}, newStyle = {}) => {
   const { added, removed, updated } = objectsDiff(oldStyle, newStyle);
 
   removed.forEach((style) => {
