@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, test, vi } from "vitest";
 
 import { DOM_TYPES } from "../h";
-import { mountDOM } from "../mount-dom";
+import { insert, mountDOM } from "../mount-dom";
 import { BASE_NODE } from "./static/dom-api";
 
 import * as attributes from "../attributes";
@@ -134,5 +134,55 @@ describe("Функция mountDOM", () => {
     mountDOM(V_DOM, NODE);
 
     expect(forEachSpy).toHaveBeenCalled();
+  });
+});
+
+describe("insert", () => {
+  let NODE = {};
+
+  beforeEach(() => {
+    vi.clearAllMocks();
+
+    NODE = BASE_NODE;
+  });
+
+  test("должен добавлять элемент в конец, если индекс не указан", () => {
+    const el = { ...NODE };
+    const parentEl = { ...NODE, childNodes: [] };
+
+    insert(el, parentEl);
+
+    expect(parentEl.append).toHaveBeenCalledWith(el);
+    expect(parentEl.insertBefore).not.toHaveBeenCalled();
+  });
+
+  test("должен выбрасывать ошибку, если индекс отрицательный", () => {
+    const el = { ...NODE };
+    const parentEl = { ...NODE, childNodes: [] };
+
+    expect(() => insert(el, parentEl, -1)).toThrow("Index must be a positive");
+  });
+
+  test("должен добавлять элемент в конец, если индекс больше длины childNodes", () => {
+    const el = { ...NODE };
+    const parentEl = { ...NODE, childNodes: [{}] };
+
+    insert(el, parentEl, 10);
+
+    expect(parentEl.append).toHaveBeenCalledWith(el);
+    expect(parentEl.insertBefore).not.toHaveBeenCalled();
+  });
+
+  test("должен вставлять элемент перед указанным индексом", () => {
+    const el = { ...NODE };
+    const parentEl = { ...NODE, childNodes: [{}, {}, {}] };
+
+    insert(el, parentEl, 1);
+
+    expect(parentEl.insertBefore).toHaveBeenCalledWith(
+      el,
+      parentEl.childNodes[1]
+    );
+    expect(parentEl.append).not.toHaveBeenCalled();
   });
 });

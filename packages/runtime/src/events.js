@@ -1,7 +1,11 @@
 export const addEventListener = (eventName, handler, el) => {
-  el.addEventListener(eventName, handler);
+  function boundHandler(e) {
+    handler(e);
+  }
 
-  return handler;
+  el.addEventListener(eventName, boundHandler);
+
+  return boundHandler;
 };
 
 export const addEventListeners = (el, listeners = {}) => {

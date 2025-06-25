@@ -2,31 +2,51 @@ import { setAttributes } from "./attributes";
 import { addEventListeners } from "./events";
 import { DOM_TYPES } from "./h";
 
-export function mountDOM(vdom, parentEl) {
+export const insert = (el, parentEl, index) => {
+  if (index == null) {
+    parentEl.append(el);
+
+    return;
+  }
+
+  if (index < 0) {
+    throw new Error("Index must be a positive");
+  }
+
+  const children = parentEl.childNodes;
+
+  if (index >= children.length) {
+    parentEl.append(el);
+  } else {
+    parentEl.insertBefore(el, children[index]);
+  }
+};
+
+export function mountDOM(vdom, parentEl, index) {
   switch (vdom.type) {
     case DOM_TYPES.TEXT:
-      createTextNode(vdom, parentEl);
+      createTextNode(vdom, parentEl, index);
       break;
     case DOM_TYPES.ELEMENT:
-      createElementNode(vdom, parentEl);
+      createElementNode(vdom, parentEl, index);
       break;
     case DOM_TYPES.FRAGMENT:
-      createFragmentNode(vdom, parentEl);
+      createFragmentNodes(vdom, parentEl, index);
       break;
     default:
       throw new Error(`Type "${vdom.type}" is unknown`);
   }
 }
 
-function createTextNode(vdom, parentEl) {
+function createTextNode(vdom, parentEl, index) {
   const textNode = document.createTextNode(vdom.value);
 
   vdom.el = textNode;
 
-  parentEl.append(textNode);
+  insert(textNode, parentEl, index);
 }
 
-function createElementNode(vdom, parentEl) {
+function createElementNode(vdom, parentEl, index) {
   const { tag, props, children } = vdom;
 
   const el = document.createElement(tag);
@@ -37,7 +57,15 @@ function createElementNode(vdom, parentEl) {
     mountDOM(child, el);
   });
 
-  parentEl.append(el);
+  insert(el, parentEl, index);
+}
+
+function createFragmentNodes(vdom, parentEl, index) {
+  vdom.el = parentEl;
+
+  vdom.children.forEach((child, i) => {
+    mountDOM(child, parentEl, index ? index + i : null);
+  });
 }
 
 function addProps(el, props, vdom) {
@@ -45,12 +73,4 @@ function addProps(el, props, vdom) {
 
   vdom.listeners = addEventListeners(el, events);
   setAttributes(el, attrs);
-}
-
-function createFragmentNode(vdom, parentEl) {
-  vdom.el = parentEl;
-
-  vdom.children.forEach((child) => {
-    mountDOM(child, parentEl);
-  });
 }

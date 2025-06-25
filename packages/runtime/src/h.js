@@ -31,3 +31,13 @@ export const h = (tag, props = {}, children = []) => {
     type: DOM_TYPES.ELEMENT,
   };
 };
+
+export const extractChildren = (vdom) => {
+  if (vdom.children === null) {
+    return [];
+  }
+
+  return vdom.children.flatMap((child) => {
+    return child.type === DOM_TYPES.FRAGMENT ? extractChildren(child) : child;
+  });
+};

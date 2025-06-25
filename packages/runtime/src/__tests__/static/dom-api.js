@@ -7,6 +7,7 @@ export const BASE_NODE = {
   removeAttribute: vi.fn(),
   setAttribute: vi.fn(),
   append: vi.fn(),
+  insertBefore: vi.fn(),
   remove: vi.fn(),
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),

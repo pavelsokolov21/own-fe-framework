@@ -182,5 +182,3 @@ export const arraysDiff = (array1, array2) => {
     removed: array1.filter((item) => !array2.includes(item)),
   };
 };
-
-console.log(arraysDiffSequence([1, 2, 3, 4], [3, 1, 5]));
