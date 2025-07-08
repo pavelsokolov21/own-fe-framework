@@ -3,7 +3,12 @@ import { destroyDOM } from "./destroy-dom";
 import { mountDOM } from "./mount-dom";
 import { DOM_TYPES, extractChildren } from "./h";
 import { objectsDiff } from "./utils/objects";
-import { removeAttribute, removeStyle, setAttribute } from "./attributes";
+import {
+  removeAttribute,
+  removeStyle,
+  setAttribute,
+  setStyle,
+} from "./attributes";
 import { isNotBlankOrEmptyString } from "./utils/strings";
 import { ARRAY_DIFF_OP, arraysDiff, arraysDiffSequence } from "./utils/arrays";
 import { addEventListener } from "./events";
@@ -61,7 +66,7 @@ const patchStyles = (el, oldStyle = {}, newStyle = {}) => {
   });
 
   added.concat(updated).forEach((style) => {
-    removeStyle(style);
+    setStyle(el, style, newStyle[style]);
   });
 };
 
@@ -101,7 +106,7 @@ const patchElement = (oldVdom, newVdom) => {
   newVdom.listeners = patchEvents(el, oldListeners, oldEvents, newEvents);
 };
 
-const patchChildren = (oldVdom, newVdom) => {
+const patchChildren = (oldVdom, newVdom, hostComponent) => {
   const oldChildren = extractChildren(oldVdom);
   const newChildren = extractChildren(newVdom);
   const parentEl = oldVdom.el;
@@ -110,10 +115,11 @@ const patchChildren = (oldVdom, newVdom) => {
 
   diffSeq.forEach((operation) => {
     const { originalIndex, index, item, op } = operation;
+    const offset = hostComponent?.offset ?? 0;
 
     switch (op) {
       case ARRAY_DIFF_OP.ADD: {
-        mountDOM(item, parentEl, index);
+        mountDOM(item, parentEl, index + offset);
 
         break;
       }
@@ -126,15 +132,20 @@ const patchChildren = (oldVdom, newVdom) => {
         const oldChild = oldChildren[originalIndex];
         const newChild = newChildren[index];
         const el = oldChild.el;
-        const elAtTargetIndex = parentEl.childNodes[index];
+        const elAtTargetIndex = parentEl.childNodes[index + offset];
 
         parentEl.insertBefore(el, elAtTargetIndex);
-        patchDOM(oldChild, newChild, parentEl);
+        patchDOM(oldChild, newChild, parentEl, hostComponent);
 
         break;
       }
       case ARRAY_DIFF_OP.NOOP: {
-        patchDOM(oldChildren[originalIndex], newChildren[index], parentEl);
+        patchDOM(
+          oldChildren[originalIndex],
+          newChildren[index],
+          parentEl,
+          hostComponent
+        );
 
         break;
       }
@@ -142,7 +153,7 @@ const patchChildren = (oldVdom, newVdom) => {
   });
 };
 
-export const patchDOM = (oldVdom, newVdom, parentEl) => {
+export const patchDOM = (oldVdom, newVdom, parentEl, hostComponent = null) => {
   if (!areNodesEqual(oldVdom, newVdom)) {
     const idx = findIndexInParent(parentEl, oldVdom.el);
 
@@ -164,7 +175,7 @@ export const patchDOM = (oldVdom, newVdom, parentEl) => {
       break;
   }
 
-  patchChildren(oldVdom, newVdom);
+  patchChildren(oldVdom, newVdom, hostComponent);
 
   return newVdom;
 };
