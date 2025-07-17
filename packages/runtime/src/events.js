@@ -1,6 +1,11 @@
-export const addEventListener = (eventName, handler, el) => {
-  function boundHandler(e) {
-    handler(e);
+export const addEventListener = (
+  eventName,
+  handler,
+  el,
+  hostComponent = null
+) => {
+  function boundHandler(...args) {
+    hostComponent ? handler.apply(hostComponent, args) : handler(...args);
   }
 
   el.addEventListener(eventName, boundHandler);
@@ -8,9 +13,9 @@ export const addEventListener = (eventName, handler, el) => {
   return boundHandler;
 };
 
-export const addEventListeners = (el, listeners = {}) => {
+export const addEventListeners = (el, listeners = {}, hostComponent = null) => {
   return Object.entries(listeners).reduce((acc, [eventName, handler]) => {
-    acc[eventName] = addEventListener(eventName, handler, el);
+    acc[eventName] = addEventListener(eventName, handler, el, hostComponent);
 
     return acc;
   }, {});

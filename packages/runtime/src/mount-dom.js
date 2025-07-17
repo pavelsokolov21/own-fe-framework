@@ -22,16 +22,16 @@ export const insert = (el, parentEl, index) => {
   }
 };
 
-export function mountDOM(vdom, parentEl, index) {
+export function mountDOM(vdom, parentEl, index, hostComponent = null) {
   switch (vdom.type) {
     case DOM_TYPES.TEXT:
       createTextNode(vdom, parentEl, index);
       break;
     case DOM_TYPES.ELEMENT:
-      createElementNode(vdom, parentEl, index);
+      createElementNode(vdom, parentEl, index, hostComponent);
       break;
     case DOM_TYPES.FRAGMENT:
-      createFragmentNodes(vdom, parentEl, index);
+      createFragmentNodes(vdom, parentEl, index, hostComponent);
       break;
     default:
       throw new Error(`Type "${vdom.type}" is unknown`);
@@ -46,11 +46,11 @@ function createTextNode(vdom, parentEl, index) {
   insert(textNode, parentEl, index);
 }
 
-function createElementNode(vdom, parentEl, index) {
+function createElementNode(vdom, parentEl, index, hostComponent) {
   const { tag, props, children } = vdom;
 
   const el = document.createElement(tag);
-  addProps(el, props, vdom);
+  addProps(el, props, vdom, hostComponent);
   vdom.el = el;
 
   children.forEach((child) => {
@@ -60,17 +60,17 @@ function createElementNode(vdom, parentEl, index) {
   insert(el, parentEl, index);
 }
 
-function createFragmentNodes(vdom, parentEl, index) {
+function createFragmentNodes(vdom, parentEl, index, hostComponent) {
   vdom.el = parentEl;
 
   vdom.children.forEach((child, i) => {
-    mountDOM(child, parentEl, index ? index + i : null);
+    mountDOM(child, parentEl, index ? index + i : null, hostComponent);
   });
 }
 
-function addProps(el, props, vdom) {
+function addProps(el, props, vdom, hostComponent) {
   const { on: events, ...attrs } = props;
 
-  vdom.listeners = addEventListeners(el, events);
+  vdom.listeners = addEventListeners(el, events, hostComponent);
   setAttributes(el, attrs);
 }
