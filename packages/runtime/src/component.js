@@ -61,7 +61,11 @@ export function defineComponent({ render, state, ...methods }) {
       }
 
       if (this.#vdom.type === DOM_TYPES.FRAGMENT) {
-        return extractChildren(this.#vdom).map(({ el }) => el);
+        return extractChildren(this.#vdom).flatMap(
+          ({ el, type, component }) => {
+            return type === DOM_TYPES.COMPONENT ? component.elements : [el];
+          }
+        );
       }
 
       return [this.#vdom.el];

@@ -33,9 +33,23 @@ export function mountDOM(vdom, parentEl, index, hostComponent = null) {
     case DOM_TYPES.FRAGMENT:
       createFragmentNodes(vdom, parentEl, index, hostComponent);
       break;
+    case DOM_TYPES.COMPONENT: {
+      createComponentNode(vdom, parentEl, index, hostComponent);
+      break;
+    }
     default:
       throw new Error(`Type "${vdom.type}" is unknown`);
   }
+}
+
+function createComponentNode(vdom, parentEl, index, hostComponent) {
+  const Component = vdom.tag;
+  const props = vdom.props;
+  const component = new Component(props);
+
+  component.mount(parentEl, index);
+  vdom.component = component;
+  vdom.el = component.firstElement;
 }
 
 function createTextNode(vdom, parentEl, index) {
