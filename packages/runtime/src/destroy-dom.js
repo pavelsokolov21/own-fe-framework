@@ -14,6 +14,9 @@ export function destroyDOM(vdom) {
     case DOM_TYPES.FRAGMENT:
       removeFragmentNodes(vdom);
       break;
+    case DOM_TYPES.COMPONENT:
+      removeComponentNode(vdom);
+      break;
     default:
       throw new Error(`Type "${type}" is unknown`);
   }
@@ -48,4 +51,8 @@ function removeFragmentNodes(vdom) {
   children.forEach((child) => {
     destroyDOM(child);
   });
+}
+
+function removeComponentNode(vdom) {
+  vdom.component.unmount();
 }

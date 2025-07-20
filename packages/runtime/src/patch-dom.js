@@ -12,6 +12,7 @@ import {
 import { isNotBlankOrEmptyString } from "./utils/strings";
 import { ARRAY_DIFF_OP, arraysDiff, arraysDiffSequence } from "./utils/arrays";
 import { addEventListener } from "./events";
+import { extractPropsAndEvents } from "./utils/props";
 
 const findIndexInParent = (parentEl, el) => {
   const idx = Array.from(parentEl.childNodes).indexOf(el);
@@ -170,6 +171,15 @@ const patchChildren = (oldVdom, newVdom, hostComponent) => {
   });
 };
 
+const patchComponent = (oldVdom, newVdom) => {
+  const { component } = oldVdom;
+  const { props } = extractPropsAndEvents(newVdom);
+
+  component.updateProps(props);
+  newVdom.component = component;
+  newVdom.el = component.firstElement;
+};
+
 export const patchDOM = (oldVdom, newVdom, parentEl, hostComponent = null) => {
   if (!areNodesEqual(oldVdom, newVdom)) {
     const idx = findIndexInParent(parentEl, oldVdom.el);
@@ -189,6 +199,9 @@ export const patchDOM = (oldVdom, newVdom, parentEl, hostComponent = null) => {
     }
     case DOM_TYPES.ELEMENT:
       patchElement(oldVdom, newVdom, hostComponent);
+      break;
+    case DOM_TYPES.COMPONENT:
+      patchComponent(oldVdom, newVdom);
       break;
   }
 

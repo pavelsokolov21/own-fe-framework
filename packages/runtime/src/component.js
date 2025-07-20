@@ -3,16 +3,35 @@ import { destroyDOM } from "./destroy-dom";
 import { patchDOM } from "./patch-dom";
 import { DOM_TYPES, extractChildren } from "./h";
 import { hasOwnProperty } from "./objects";
+import equal from "fast-deep-equal";
+import { Dispatcher } from "./dispatcher";
 
 export function defineComponent({ render, state, ...methods }) {
   class Component {
     #vdom = null;
     #hostEl = null;
+    #eventHandlers = null;
+    #parentComponent = null;
+    #dispatcher = new Dispatcher();
+    #subscriptions = [];
     #isMounted = false;
 
-    constructor(props = {}) {
+    constructor(props = {}, eventHandlers = {}, parentComponent = null) {
       this.props = props;
       this.state = state ? state(props) : {};
+      this.#eventHandlers = eventHandlers;
+      this.#parentComponent = parentComponent;
+    }
+
+    updateProps(props) {
+      const newProps = { ...this.props, ...props };
+
+      if (equal(props, newProps)) {
+        return;
+      }
+
+      this.props = newProps;
+      this.#patch();
     }
 
     updateState(state) {
@@ -31,6 +50,8 @@ export function defineComponent({ render, state, ...methods }) {
 
       this.#vdom = this.render();
       mountDOM(this.#vdom, hostEl, index, this);
+      this.#wireEventHandlers();
+
       this.#hostEl = hostEl;
       this.#isMounted = true;
     }
@@ -41,9 +62,16 @@ export function defineComponent({ render, state, ...methods }) {
       }
 
       destroyDOM(this.#vdom);
+      this.#subscriptions.forEach((unsub) => unsub());
+
       this.#vdom = null;
       this.#hostEl = null;
       this.#isMounted = false;
+      this.#subscriptions = [];
+    }
+
+    emit(eventName, payload) {
+      this.#dispatcher.dispatch(eventName, payload);
     }
 
     #patch() {
@@ -69,6 +97,24 @@ export function defineComponent({ render, state, ...methods }) {
       }
 
       return [this.#vdom.el];
+    }
+
+    #wireEventHandler(eventName, handler) {
+      return this.#dispatcher.subscribe(eventName, (payload) => {
+        if (this.#parentComponent) {
+          handler.call(this.#parentComponent, payload);
+        } else {
+          handler(payload);
+        }
+      });
+    }
+
+    #wireEventHandlers() {
+      this.#subscriptions = Object.entries(this.#eventHandlers).map(
+        ([eventName, handler]) => {
+          return this.#wireEventHandler(eventName, handler);
+        }
+      );
     }
 
     get firstElement() {

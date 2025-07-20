@@ -1,6 +1,7 @@
 import { setAttributes } from "./attributes";
 import { addEventListeners } from "./events";
 import { DOM_TYPES } from "./h";
+import { extractPropsAndEvents } from "./utils/props";
 
 export const insert = (el, parentEl, index) => {
   if (index == null) {
@@ -44,8 +45,8 @@ export function mountDOM(vdom, parentEl, index, hostComponent = null) {
 
 function createComponentNode(vdom, parentEl, index, hostComponent) {
   const Component = vdom.tag;
-  const props = vdom.props;
-  const component = new Component(props);
+  const { props, events } = extractPropsAndEvents(vdom);
+  const component = new Component(props, events, hostComponent);
 
   component.mount(parentEl, index);
   vdom.component = component;
