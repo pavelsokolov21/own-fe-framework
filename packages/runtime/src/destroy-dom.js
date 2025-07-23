@@ -1,24 +1,31 @@
 import { removeEventListeners } from "./events";
 import { DOM_TYPES } from "./h";
+import { enqueueJob } from "./scheduler";
 
 export function destroyDOM(vdom) {
   const { type } = vdom;
 
   switch (type) {
-    case DOM_TYPES.TEXT:
+    case DOM_TYPES.TEXT: {
       removeTextNode(vdom);
       break;
-    case DOM_TYPES.ELEMENT:
+    }
+    case DOM_TYPES.ELEMENT: {
       removeElementNode(vdom);
       break;
-    case DOM_TYPES.FRAGMENT:
+    }
+    case DOM_TYPES.FRAGMENT: {
       removeFragmentNodes(vdom);
       break;
-    case DOM_TYPES.COMPONENT:
+    }
+    case DOM_TYPES.COMPONENT: {
       removeComponentNode(vdom);
+      enqueueJob(() => vdom.component.onUnmounted());
       break;
-    default:
+    }
+    default: {
       throw new Error(`Type "${type}" is unknown`);
+    }
   }
 
   delete vdom.el;

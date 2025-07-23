@@ -2,6 +2,7 @@ import { setAttributes } from "./attributes";
 import { addEventListeners } from "./events";
 import { DOM_TYPES } from "./h";
 import { extractPropsAndEvents } from "./utils/props";
+import { enqueueJob } from "./scheduler";
 
 export const insert = (el, parentEl, index) => {
   if (index == null) {
@@ -25,21 +26,26 @@ export const insert = (el, parentEl, index) => {
 
 export function mountDOM(vdom, parentEl, index, hostComponent = null) {
   switch (vdom.type) {
-    case DOM_TYPES.TEXT:
+    case DOM_TYPES.TEXT: {
       createTextNode(vdom, parentEl, index);
       break;
-    case DOM_TYPES.ELEMENT:
+    }
+    case DOM_TYPES.ELEMENT: {
       createElementNode(vdom, parentEl, index, hostComponent);
       break;
-    case DOM_TYPES.FRAGMENT:
+    }
+    case DOM_TYPES.FRAGMENT: {
       createFragmentNodes(vdom, parentEl, index, hostComponent);
       break;
+    }
     case DOM_TYPES.COMPONENT: {
       createComponentNode(vdom, parentEl, index, hostComponent);
+      enqueueJob(() => vdom.component.onMounted());
       break;
     }
-    default:
+    default: {
       throw new Error(`Type "${vdom.type}" is unknown`);
+    }
   }
 }
 
@@ -62,10 +68,10 @@ function createTextNode(vdom, parentEl, index) {
 }
 
 function createElementNode(vdom, parentEl, index, hostComponent) {
-  const { tag, props, children } = vdom;
+  const { tag, children } = vdom;
 
   const el = document.createElement(tag);
-  addProps(el, props, vdom, hostComponent);
+  addProps(el, vdom, hostComponent);
   vdom.el = el;
 
   children.forEach((child) => {
@@ -83,8 +89,8 @@ function createFragmentNodes(vdom, parentEl, index, hostComponent) {
   });
 }
 
-function addProps(el, props, vdom, hostComponent) {
-  const { on: events, ...attrs } = props;
+function addProps(el, vdom, hostComponent) {
+  const { on: events, ...attrs } = extractPropsAndEvents(vdom);
 
   vdom.listeners = addEventListeners(el, events, hostComponent);
   setAttributes(el, attrs);

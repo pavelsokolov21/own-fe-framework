@@ -5,8 +5,15 @@ import { DOM_TYPES, extractChildren } from "./h";
 import { hasOwnProperty } from "./objects";
 import equal from "fast-deep-equal";
 import { Dispatcher } from "./dispatcher";
+import { noop } from "./utils/common";
 
-export function defineComponent({ render, state, ...methods }) {
+export function defineComponent({
+  render,
+  state,
+  onMounted = noop,
+  onUnmounted = noop,
+  ...methods
+}) {
   class Component {
     #vdom = null;
     #hostEl = null;
@@ -72,6 +79,14 @@ export function defineComponent({ render, state, ...methods }) {
 
     emit(eventName, payload) {
       this.#dispatcher.dispatch(eventName, payload);
+    }
+
+    onMounted() {
+      return Promise.resolve(onMounted.call(this));
+    }
+
+    onUnmounted() {
+      return Promise.resolve(onUnmounted.call(this));
     }
 
     #patch() {
