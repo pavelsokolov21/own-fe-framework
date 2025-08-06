@@ -1,11 +1,17 @@
 import { mountDOM } from "./mount-dom";
 import { destroyDOM } from "./destroy-dom";
 import { patchDOM } from "./patch-dom";
-import { DOM_TYPES, extractChildren } from "./h";
+import {
+  DOM_TYPES,
+  extractChildren,
+  didCreateSlot,
+  resetDidCreateSlot,
+} from "./h";
 import { hasOwnProperty } from "./objects";
 import equal from "fast-deep-equal";
 import { Dispatcher } from "./dispatcher";
 import { noop } from "./utils/common";
+import { fillSlots } from "./slots";
 
 export function defineComponent({
   render,
@@ -23,11 +29,17 @@ export function defineComponent({
     #subscriptions = [];
     #isMounted = false;
 
+    #children = [];
+
     constructor(props = {}, eventHandlers = {}, parentComponent = null) {
       this.props = props;
       this.state = state ? state(props) : {};
       this.#eventHandlers = eventHandlers;
       this.#parentComponent = parentComponent;
+    }
+
+    setExternalContent(children) {
+      this.#children = children;
     }
 
     updateProps(props) {
@@ -47,7 +59,14 @@ export function defineComponent({
     }
 
     render() {
-      return render.call(this);
+      const vdom = render.call(this);
+
+      if (didCreateSlot()) {
+        fillSlots(vdom, this.#children);
+        resetDidCreateSlot();
+      }
+
+      return vdom;
     }
 
     mount(hostEl, index = null) {

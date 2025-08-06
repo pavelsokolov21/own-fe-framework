@@ -5,6 +5,7 @@ export const DOM_TYPES = {
   ELEMENT: "element",
   FRAGMENT: "fragment",
   COMPONENT: "component",
+  SLOT: "slot",
 };
 
 export function hString(txt) {
@@ -44,4 +45,20 @@ export const extractChildren = (vdom) => {
   return vdom.children.flatMap((child) => {
     return child.type === DOM_TYPES.FRAGMENT ? extractChildren(child) : child;
   });
+};
+
+let hSlotCalled = false;
+
+export const didCreateSlot = () => {
+  return hSlotCalled;
+};
+
+export const resetDidCreateSlot = () => {
+  hSlotCalled = false;
+};
+
+export const hSlot = (children = []) => {
+  hSlotCalled = true;
+
+  return { type: DOM_TYPES.SLOT, children };
 };

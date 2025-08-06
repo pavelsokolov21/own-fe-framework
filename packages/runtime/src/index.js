@@ -1,3 +1,3 @@
-export { hFragment, h, hString } from "./h";
+export { hFragment, h, hString, hSlot } from "./h";
 export { createApp } from "./app";
 export { defineComponent } from "./component";
