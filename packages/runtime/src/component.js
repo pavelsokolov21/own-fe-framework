@@ -28,8 +28,8 @@ export function defineComponent({
     #dispatcher = new Dispatcher();
     #subscriptions = [];
     #isMounted = false;
-
     #children = [];
+    #appContext = null;
 
     constructor(props = {}, eventHandlers = {}, parentComponent = null) {
       this.props = props;
@@ -108,6 +108,10 @@ export function defineComponent({
       return Promise.resolve(onUnmounted.call(this));
     }
 
+    setAppContext(appContext) {
+      this.#appContext = appContext;
+    }
+
     #patch() {
       if (!this.#isMounted) {
         throw new Error("Component is not mounted");
@@ -115,6 +119,10 @@ export function defineComponent({
 
       const vdom = this.render();
       this.#vdom = patchDOM(this.#vdom, vdom, this.#hostEl, this);
+    }
+
+    get appContext() {
+      return this.#appContext;
     }
 
     get elements() {

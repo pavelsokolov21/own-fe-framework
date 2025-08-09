@@ -56,6 +56,7 @@ function createComponentNode(vdom, parentEl, index, hostComponent) {
 
   component.setExternalContent(children);
   component.mount(parentEl, index);
+  component.setAppContext(hostComponent?.appContext ?? {});
   vdom.component = component;
   vdom.el = component.firstElement;
 }
